@@ -1,46 +1,76 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
+import {Route, Link, withRouter} from 'react-router-dom'
+
 import '../styles/App.css';
 
-import {connect} from 'react-redux'
-import {fetchCategories} from "../actions";
+import {fetchCategories} from "../actions"
+import {capitalize} from '../utils/helpers'
+
+import Category from './Category'
 
 class App extends Component {
     state = {
         initialized: false
     }
+
     componentDidMount() {
         // issue API call only for very first application visit
         if (this.state.initialized) return;
         this.setState({initialized: true});
         this.props.fetchCategories();
     }
+
     render() {
         const {categories} = this.props;
         return (
             <div className="App">
-                <header>
-                    <h1 className="text-center">Readable Application</h1>
-                </header>
-                <ul>
-                    {categories.map((category) => (
-                        <li key={category.path}>{category.name}</li>
-                    ))}
-                </ul>
+                <div className="page-header text-center">
+                    <h1>Udacity Readable</h1>
+                    <h1>
+                        <small>Project demonstrating React & Redux in action</small>
+                    </h1>
+                </div>
+
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-lg-2 col-md-3 col-sm-6">
+                            <Route path="/" render={() => (
+                                <ul className="nav nav-pills nav-stacked">
+                                    <h4>Available Topics:</h4>
+                                    {categories.map((category) => (
+                                        <li key={category.path}>
+                                            <Link to={'/' + category.path}>{capitalize(category.name)}</Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}/>
+                        </div>
+
+                        <div className="col-lg-10 col-md-9 col-sm-6">
+                        {categories.map(category => (
+                            <Route key={category.path} path={'/' + category.path} render={() => (
+                                    <Category name={category.name}/>
+                            )}/>
+                        ))}
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
 }
 
-function mapStateToProps ({categories}) {
+function mapStateToProps({categories}) {
     return {
         categories
     }
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps(dispatch) {
     return {
         fetchCategories: () => fetchCategories(dispatch)
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
