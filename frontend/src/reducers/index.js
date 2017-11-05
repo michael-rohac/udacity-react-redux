@@ -1,24 +1,42 @@
 /**
  * © 2017 Michal Rohac, All Rights Reserved.
  */
-
-import {ADD_CATEGORIES} from "../actions"
+import {combineReducers} from 'redux'
+import {ADD_CATEGORIES, ADD_POSTS} from "../actions"
 
 const initialState = {
-    categories: []
+    categories: [],
+    posts: {}
 }
 
-function categories(state = initialState, action) {
+function categories(state = [], action) {
     const {categories} = action;
     switch (action.type) {
         case ADD_CATEGORIES:
-            return {
+            const ret = {
                 ...state,
-                categories: categories
+                categories
             }
+            return ret
         default:
             return state;
     }
 }
 
-export default categories
+function posts(state = {}, action) {
+    const {posts} = action;
+    switch (action.type) {
+        case ADD_POSTS:
+            const ret = {
+                ...state,
+                posts: posts
+            }
+            return ret
+        default:
+            return state
+    }
+}
+
+export default combineReducers({
+    categories, posts
+})

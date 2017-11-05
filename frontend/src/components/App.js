@@ -4,7 +4,7 @@ import {Route, Link, withRouter} from 'react-router-dom'
 
 import '../styles/App.css';
 
-import {fetchCategories} from "../actions"
+import {fetchCategories, fetchPosts} from "../actions"
 import {capitalize} from '../utils/helpers'
 
 import Category from './Category'
@@ -17,8 +17,9 @@ class App extends Component {
     componentDidMount() {
         // issue API call only for very first application visit
         if (this.state.initialized) return;
-        this.setState({initialized: true});
         this.props.fetchCategories();
+        this.props.fetchPosts();
+        this.setState({initialized: true});
     }
 
     render() {
@@ -61,15 +62,16 @@ class App extends Component {
     }
 }
 
-function mapStateToProps({categories}) {
+function mapStateToProps({categories, posts}) {
     return {
-        categories
+        categories, posts
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        fetchCategories: () => fetchCategories(dispatch)
+        fetchCategories: () => fetchCategories(dispatch),
+        fetchPosts: () => fetchPosts(dispatch)
     }
 }
 
