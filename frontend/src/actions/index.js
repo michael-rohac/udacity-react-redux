@@ -5,7 +5,7 @@ import * as Api from "../utils/api"
 
 export const ADD_CATEGORIES = 'ADD_CATEGORIES'
 export const ADD_POSTS = 'ADD_POSTS'
-
+export const UPDATE_POST = 'UPDATE_POST'
 
 export const fetchCategories = dispatch => (
     Api.fetchCategories()
@@ -25,4 +25,11 @@ export const fetchPosts = dispatch => (
                 posts
             })
         })
+)
+
+export const updatePost = (post) => dispatch => (
+    dispatch({
+        type: UPDATE_POST,
+        post
+    })
 )

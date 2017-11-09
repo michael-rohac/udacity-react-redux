@@ -1,36 +1,47 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import {Route, Link, withRouter} from 'react-router-dom'
+import {Link, Route, withRouter} from 'react-router-dom'
 
 import '../styles/App.css';
 
-import {fetchCategories, fetchPosts} from "../actions"
+import {fetchPosts} from "../actions"
 import {capitalize} from '../utils/helpers'
+import * as Api from '../utils/api'
 
 import Category from './Category'
 
 class App extends Component {
     state = {
+        categories: [],
         initialized: false
     }
 
     componentDidMount() {
         // issue API call only for very first application visit
         if (this.state.initialized) return;
-        this.props.fetchCategories();
+        Api.fetchCategories()
+            .then((data) => {
+                const {categories} = data;
+                this.setState({
+                    categories: categories.map(category => {
+                        return {
+                            name: capitalize(category.name),
+                            path: category.path
+                        }
+                    })
+                })
+            });
         this.props.fetchPosts();
         this.setState({initialized: true});
     }
 
     render() {
-        const {categories} = this.props;
+        const {categories} = this.state;
+        const {posts, location} = this.props;
         return (
             <div className="App">
                 <div className="page-header text-center">
-                    <h1>Udacity Readable</h1>
-                    <h1>
-                        <small>Project demonstrating React & Redux in action</small>
-                    </h1>
+                    <h1 title="Project demonstrating React & Redux in action">Udacity Readable</h1>
                 </div>
 
                 <div className="container-fluid">
@@ -40,8 +51,8 @@ class App extends Component {
                                 <ul className="nav nav-pills nav-stacked">
                                     <h4>Available Topics:</h4>
                                     {categories.map((category) => (
-                                        <li key={category.path}>
-                                            <Link to={'/' + category.path}>{capitalize(category.name)}</Link>
+                                        <li key={category.path} className={location.pathname === '/' + category.path ? 'active' : ''}>
+                                            <Link to={'/' + category.path}>{category.name}</Link>
                                         </li>
                                     ))}
                                 </ul>
@@ -49,11 +60,13 @@ class App extends Component {
                         </div>
 
                         <div className="col-lg-10 col-md-9 col-sm-6">
-                        {categories.map(category => (
-                            <Route key={category.path} path={'/' + category.path} render={() => (
-                                    <Category name={category.name}/>
-                            )}/>
-                        ))}
+                            {
+                                this.state.categories.map(category => (
+                                    <Route exact key={category.path} path={'/' + category.path} render={() => (
+                                        <Category category={category} posts={posts[category.path] || []}/>
+                                    )}/>
+                                ))
+                            }
                         </div>
                     </div>
                 </div>
@@ -62,15 +75,18 @@ class App extends Component {
     }
 }
 
-function mapStateToProps({categories, posts}) {
+function mapStateToProps({posts}) {
     return {
-        categories, posts
+        posts: posts.reduce((acc, post) => {
+            if (!acc[post.category]) acc[post.category] = [];
+            acc[post.category].push(post);
+            return acc;
+        }, {})
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        fetchCategories: () => fetchCategories(dispatch),
         fetchPosts: () => fetchPosts(dispatch)
     }
 }

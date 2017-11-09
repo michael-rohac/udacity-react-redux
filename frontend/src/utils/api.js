@@ -23,3 +23,13 @@ export const fetchPosts = () =>
 
 export const fetchCategoryPosts = (categoryName) =>
     fetch(`${api}/${categoryName}/posts`, {headers}).then(res => res.json())
+
+export const postVote = (postId, upVote) =>
+    fetch(`${api}/posts/${postId}`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({option: upVote ? 'upVote' : 'downVote'})
+    }).then(res => res.json())
