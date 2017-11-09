@@ -3,3 +3,8 @@ export function capitalize (str = '') {
         ? ''
         : str[0].toUpperCase() + str.slice(1)
 }
+
+export const CONST = {
+    ORDER_BY_VOTE_SCORE: 'voteScore',
+    ORDER_BY_TIMESTAMP: 'timestamp'
+}

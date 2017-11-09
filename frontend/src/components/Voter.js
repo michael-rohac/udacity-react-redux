@@ -18,7 +18,7 @@ class Voter extends Component {
     render() {
         const {post} = this.props
         return (
-            <div className="text-right">
+            <div className="inline-block">
                 <span>
                     <b><em>Vote:</em></b>
                 </span>

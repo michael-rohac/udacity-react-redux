@@ -7,6 +7,8 @@ export const ADD_CATEGORIES = 'ADD_CATEGORIES'
 export const ADD_POSTS = 'ADD_POSTS'
 export const UPDATE_POST = 'UPDATE_POST'
 
+export const UPDATE_UI_SETTINGS = 'UPDATE_UI_SETTINGS'
+
 export const fetchCategories = dispatch => (
     Api.fetchCategories()
         .then(data => {
@@ -31,5 +33,12 @@ export const updatePost = (post) => dispatch => (
     dispatch({
         type: UPDATE_POST,
         post
+    })
+)
+
+export const updateUiSettings = (uiSettings) => dispatch => (
+    dispatch({
+        type: UPDATE_UI_SETTINGS,
+        uiSettings
     })
 )
