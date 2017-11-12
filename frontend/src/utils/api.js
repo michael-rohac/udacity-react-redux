@@ -33,3 +33,26 @@ export const postVote = (postId, upVote) =>
         },
         body: JSON.stringify({option: upVote ? 'upVote' : 'downVote'})
     }).then(res => res.json())
+
+export const updatePost = (post) => {
+    const {title, body} = post;
+    return fetch(`${api}/posts/${post.id}`, {
+        method: 'PUT',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({title, body})
+    }).then(res => res.json())
+}
+
+export const createPost = (post) => {
+    return fetch(`${api}/posts`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(post)
+    }).then(res => res.json())
+}

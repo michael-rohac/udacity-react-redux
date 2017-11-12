@@ -2,16 +2,18 @@
  * © 2017 Michal Rohac, All Rights Reserved.
  */
 import React, {Component} from 'react';
-import {Link, Route} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import PostList from './PostList'
 import {CONST} from '../utils/helpers'
 
 class Category extends Component {
+    shouldUpdateComponent() {
+        console.log('dsfas')
+    }
     render() {
-        const {category, uiSettings, match} = this.props;
+        const {category, posts, uiSettings} = this.props;
         let {order} = uiSettings.posts;
-
         return (
             <div>
                 <div>
@@ -44,20 +46,19 @@ class Category extends Component {
                     </div>
                 </div>
                 <hr/>
-
-                <Route exact path={match.url} component={PostList}/>
-
+                <PostList/>
             </div>
         )
     }
 }
 
-function mapStateToProps({categories, uiSettings}, {location}) {
+function mapStateToProps({categories, posts, uiSettings}, {location}) {
     const categoryPath = location.pathname.substring(1);
     return {
-        uiSettings,
-        category: categories[categoryPath]
+        category: categories[categoryPath],
+        posts: !posts[categoryPath] ? [] : Object.keys(posts[categoryPath]).map(postId => posts[categoryPath][postId]),
+        uiSettings
     }
 }
 
-export default connect(mapStateToProps)(Category)
+export default withRouter(connect(mapStateToProps)(Category))

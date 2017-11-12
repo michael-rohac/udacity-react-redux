@@ -2,23 +2,33 @@
  * © 2017 Michal Rohac, All Rights Reserved.
  */
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
 import moment from 'moment'
 
 import VoteScore from './VoteScore'
 import Voter from './Voter'
 
-class Post extends Component {
+class PostDetail extends Component {
+    redirect(event, url) {
+        const {history} = this.props;
+        event.preventDefault();
+        history.push(url);
+        // history.push(url);
+    }
     render() {
-        const {post} = this.props;
+        const {post, readOnly} = this.props;
         const viewLocation = `/${post.category}`
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <div>
-                        <Link to={`${viewLocation}/posts/${post.id}`} className="extra-margin-lr">
+                        {!readOnly && <Link to={`${viewLocation}/posts/${post.id}`} className="extra-margin-lr">
                             <span className="glyphicon glyphicon-pencil"></span>
                         </Link>
+
+                        }
+
                         <h3 className="panel-title inline-block">{post.title}</h3>
                         <div className="text-right pull-right">{moment(post.timestamp).format('MMMM Do YYYY, h:mm A')}</div>
                     </div>
@@ -34,7 +44,9 @@ class Post extends Component {
                         <span>Author: {post.author}</span>
                     </div>
                     <div className="pull-right">
-                        <Voter post={post} />
+                        {!readOnly && (
+                            <Voter post={post} />
+                        )}
                     </div>
                 </div>
             </div>
@@ -42,4 +54,4 @@ class Post extends Component {
     }
 }
 
-export default Post;
+export default withRouter(connect()(PostDetail));

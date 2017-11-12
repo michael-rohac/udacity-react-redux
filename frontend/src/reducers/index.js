@@ -52,7 +52,7 @@ function uiSettings(state = {
     posts: {
         order: {
             by: 'voteScore',
-            ascending: true
+            ascending: false
         }
     }
 }, action) {

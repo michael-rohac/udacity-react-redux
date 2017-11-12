@@ -4,6 +4,12 @@ export function capitalize (str = '') {
         : str[0].toUpperCase() + str.slice(1)
 }
 
+export function dateCompare(d1, d2) {
+    if (!d1) return -1;
+    if (!d2) return 1;
+    return new Date(d1).getTime() - new Date(d2).getTime()
+}
+
 export const CONST = {
     ORDER_BY_VOTE_SCORE: 'voteScore',
     ORDER_BY_TIMESTAMP: 'timestamp'

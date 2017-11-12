@@ -9,7 +9,7 @@ class VoteScore extends Component {
         return (
             <div className="inline-block">
                 <span className="badge">{voteScore > 0 ? '+' : ''}{voteScore}</span>
-                <span className={`glyphicon ${voteScore && voteScore >= 0 ? 'glyphicon-thumbs-up' : 'glyphicon-thumbs-down'}`}
+                <span className={`glyphicon ${voteScore >= 0 ? 'glyphicon-thumbs-up' : 'glyphicon-thumbs-down'}`}
                       style={{marginLeft: 5, marginRight: 5}}></span>
             </div>
         )
