@@ -11,18 +11,24 @@ import * as Api from '../utils/api'
 import {updatePost} from '../actions'
 
 class EditPost extends Component {
-    state = {
-        editMode: false,
-        post: {
-            title: "",
-            body: "",
-            author: ""
+    constructor(props) {
+        super(props);
+        const {title = '', body = '', author = ''} = props.post || {};
+        this.state = {
+            post: {
+                title, body, author
+            }
         }
+        this.handleSave.bind(this);
+        this.handleAuthorChanged.bind(this);
+        this.handleTitleChanged.bind(this);
+        this.handleBodyChanged.bind(this);
     }
+
     handleSave(e) {
         const {post, history, updatePostAction} = this.props;
         const newPost = {...post, ...this.state.post};
-        const opPromise = this.state.editMode ?
+        const opPromise = this.props.editMode ?
             Api.updatePost(newPost) : Api.createPost(newPost);
         opPromise.then(data => {
             updatePostAction(data);
@@ -48,9 +54,7 @@ class EditPost extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const newState = {
-            editMode: nextProps.post ? true : false
-        };
+        const newState = {};
         if (nextProps.post) {
             const {title, body, author} = nextProps.post;
             newState.post = {title, body, author};
@@ -60,7 +64,7 @@ class EditPost extends Component {
 
     render() {
         const {history, category} = this.props;
-        const {editMode} = this.state;
+        const {editMode} = this.props;
         return (
             <div>
                 <div>
@@ -73,7 +77,7 @@ class EditPost extends Component {
                             <span className="glyphicon glyphicon-arrow-left"></span>
                             &nbsp;Back
                         </button>
-                        <button className="btn btn-success" title="Save post" onClick={this.handleSave.bind(this)}>
+                        <button className="btn btn-success" title="Save post" onClick={e => this.handleSave(e)}>
                             <span className="glyphicon glyphicon-ok"></span>
                             &nbsp;Save
                         </button>
@@ -89,7 +93,7 @@ class EditPost extends Component {
                                    id="author"
                                    placeholder="Author"
                                    value={this.state.post.author}
-                                   onChange={this.handleAuthorChanged.bind(this)}/>
+                                   onChange={e => this.handleAuthorChanged(e)}/>
                         </div>
                     }
                     <div className="form-group">
@@ -99,7 +103,7 @@ class EditPost extends Component {
                                id="title"
                                placeholder="Title"
                                value={this.state.post.title}
-                               onChange={this.handleTitleChanged.bind(this)}/>
+                               onChange={e => this.handleTitleChanged(e)}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="body">Post</label>
@@ -109,7 +113,7 @@ class EditPost extends Component {
                             id="body"
                             placeholder="Text"
                             value={this.state.post.body}
-                            onChange={this.handleBodyChanged.bind(this)}/>
+                            onChange={e => this.handleBodyChanged(e)}/>
                     </div>
                 </form>
                 <hr/>
@@ -131,7 +135,7 @@ function mapStateToProps({posts, categories}, {location, match}) {
             category: category,
             voteScore: 0
         };
-    return {post, category: categories[category]}
+    return {post, category: categories[category], editMode: match.params && match.params.id && posts[category] ? true : false}
 }
 
 function mapDispatchToProps(dispatch) {

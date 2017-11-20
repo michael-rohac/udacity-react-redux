@@ -13,7 +13,7 @@ class PostDetail extends Component {
     redirect(event, url) {
         const {history} = this.props;
         event.preventDefault();
-        history.push(url);
+            history.push(url);
         // history.push(url);
     }
     render() {

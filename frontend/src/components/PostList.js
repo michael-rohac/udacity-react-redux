@@ -9,12 +9,11 @@ import {CONST, dateCompare} from '../utils/helpers'
 
 class PostList extends Component {
     render() {
-        const {uiSettings} = this.props;
-        let {order} = uiSettings.posts;
+        let {postsOrder} = this.props;
         const posts = (this.props.posts).sort((post1, post2) => {
-            const ascResult = order.by === CONST.ORDER_BY_TIMESTAMP ?
+            const ascResult = postsOrder.by === CONST.ORDER_BY_TIMESTAMP ?
                 dateCompare(post1.timestamp, post2.timestamp) : post1.voteScore - post2.voteScore;
-            return order.ascending ? ascResult : -ascResult;
+            return postsOrder.ascending ? ascResult : -ascResult;
         })
 
         return (
@@ -43,7 +42,7 @@ function mapStateToProps({categories, posts, uiSettings}, {match}) {
     return {
         category: categories[category],
         posts: allPosts,
-        uiSettings
+        postsOrder: uiSettings.postsOrder
     }
 }
 

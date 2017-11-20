@@ -9,6 +9,7 @@ import {fetchCategories, fetchPosts} from "../actions"
 import Category from './Category'
 import PostList from './PostList'
 import EditPost from './EditPost'
+import PostOrder from './PostOrder'
 
 class App extends Component {
     state = {
@@ -52,7 +53,13 @@ class App extends Component {
                                     </ul>
                                 </div>
                                 <div className="col-lg-10 col-md-9 col-sm-6">
-                                    {location.pathname === '/' && (<PostList/>)}
+                                    {location.pathname === '/' && (
+                                        <div>
+                                            <PostOrder/>
+                                            <hr/>
+                                            <PostList/>
+                                        </div>
+                                    )}
                                     {categories.map(category => (
                                         <div key={category.path}>
                                             <Route exact path={`/${category.path}`} component={Category}/>

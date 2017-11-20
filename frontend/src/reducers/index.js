@@ -49,18 +49,16 @@ function categories(state = {}, action) {
 }
 
 function uiSettings(state = {
-    posts: {
-        order: {
-            by: 'voteScore',
-            ascending: false
-        }
+    postsOrder: {
+        by: 'voteScore',
+        ascending: false
     }
 }, action) {
     switch (action.type) {
         case UPDATE_UI_SETTINGS:
             const {uiSettings} = action;
             return {
-                ...state, uiSettings
+                ...state, ...uiSettings
             }
         default:
             return state
