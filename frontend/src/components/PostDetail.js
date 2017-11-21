@@ -6,17 +6,31 @@ import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import moment from 'moment'
 
-import {VoteScore, Voter} from './'
+import * as Api from '../utils/api'
+import {VoteScore, Voter, CommentList} from './'
 
 class PostDetail extends Component {
+    state = {
+        comments: []
+    }
     redirect(event, url) {
         const {history} = this.props;
         event.preventDefault();
             history.push(url);
         // history.push(url);
     }
+    componentDidMount() {
+        const {post, readOnly} = this.props;
+        if (!post) return;
+
+        Api.fetchPostComments(post.id)
+            .then(comments => {
+                this.setState({comments})
+            })
+    }
     render() {
         const {post, readOnly} = this.props;
+        const {comments} = this.state;
         const viewLocation = `/${post.category}`
         return (
             <div className="panel panel-default">
@@ -36,6 +50,7 @@ class PostDetail extends Component {
                     {post.body && post.body.split("\n").map((text, idx) => (
                         <p key={idx}>{text}</p>
                     ))}
+                    <CommentList comments={comments}/>
                 </div>
                 <div className="panel-footer">
                     <div className="inline-block">
