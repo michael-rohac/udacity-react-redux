@@ -6,10 +6,7 @@ import '../styles/App.css';
 
 import {fetchCategories, fetchPosts} from "../actions"
 
-import Category from './Category'
-import PostList from './PostList'
-import EditPost from './EditPost'
-import PostOrder from './PostOrder'
+import {Category, PostList, EditPost, PostOrder} from './'
 
 class App extends Component {
     state = {

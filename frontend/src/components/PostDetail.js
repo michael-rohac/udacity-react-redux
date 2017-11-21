@@ -6,8 +6,7 @@ import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import moment from 'moment'
 
-import VoteScore from './VoteScore'
-import Voter from './Voter'
+import {VoteScore, Voter} from './'
 
 class PostDetail extends Component {
     redirect(event, url) {

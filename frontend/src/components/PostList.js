@@ -4,8 +4,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import PostDetail from './PostDetail'
 import {CONST, dateCompare} from '../utils/helpers'
+
+import {PostDetail} from './'
 
 class PostList extends Component {
     render() {

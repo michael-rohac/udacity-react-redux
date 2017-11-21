@@ -6,7 +6,8 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import uuid from 'uuid/v1'
 import moment from 'moment'
-import PostDetail from './PostDetail'
+
+import {PostDetail} from './'
 import * as Api from '../utils/api'
 import {updatePost} from '../actions'
 
