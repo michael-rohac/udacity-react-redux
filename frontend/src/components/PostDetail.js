@@ -5,11 +5,16 @@ import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import moment from 'moment'
+import {updatePost} from '../actions'
 
 import * as Api from '../utils/api'
 import {VoteScore, Voter, CommentList} from './'
 
 class PostDetail extends Component {
+    constructor(props) {
+        super(props);
+        this.handlePostVote.bind(this);
+    }
     state = {
         comments: []
     }
@@ -28,9 +33,18 @@ class PostDetail extends Component {
                 this.setState({comments})
             })
     }
+    handlePostVote(postId, upVote) {
+        const {updatePostAction} = this.props;
+        Api.postVote(postId, upVote)
+            .then(data => {
+                updatePostAction(data)
+            })
+    }
     render() {
         const {post, readOnly} = this.props;
         const {comments} = this.state;
+        const upVote = readOnly ? undefined : () => this.handlePostVote(post.id, true);
+        const downVote = readOnly ? undefined : () => this.handlePostVote(post.id, false);
         const viewLocation = `/${post.category}`
         return (
             <div className="panel panel-default">
@@ -54,13 +68,10 @@ class PostDetail extends Component {
                 </div>
                 <div className="panel-footer">
                     <div className="inline-block">
-                        <VoteScore voteScore={post.voteScore} className="inline-block"/>
                         <span>Author: {post.author}</span>
                     </div>
                     <div className="pull-right">
-                        {!readOnly && (
-                            <Voter post={post} />
-                        )}
+                        <VoteScore voteScore={post.voteScore} className="inline-block" upVote={upVote} downVote={downVote}/>
                     </div>
                 </div>
             </div>
@@ -68,4 +79,9 @@ class PostDetail extends Component {
     }
 }
 
-export default withRouter(connect()(PostDetail));
+function mapDispatchToProps(dispatch) {
+    return {
+        updatePostAction: (post) => updatePost(post)(dispatch)
+    }
+}
+export default withRouter(connect(null, mapDispatchToProps)(PostDetail));
