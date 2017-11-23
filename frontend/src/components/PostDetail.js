@@ -8,7 +8,7 @@ import moment from 'moment'
 import {updatePost} from '../actions'
 
 import * as Api from '../utils/api'
-import {CommentList, VoteScore} from './'
+import {CommentList, VoteScore, DropdownMenu} from './'
 
 class PostDetail extends Component {
     constructor(props) {
@@ -17,12 +17,6 @@ class PostDetail extends Component {
     }
     state = {
         comments: []
-    }
-    redirect(event, url) {
-        const {history} = this.props;
-        event.preventDefault();
-            history.push(url);
-        // history.push(url);
     }
     componentDidMount() {
         const {post} = this.props;
@@ -41,21 +35,29 @@ class PostDetail extends Component {
             })
     }
     render() {
-        const {post, readOnly} = this.props;
+        const {post, readOnly, history} = this.props;
         const {comments} = this.state;
         const upVote = readOnly ? undefined : () => this.handlePostVote(post.id, true);
         const downVote = readOnly ? undefined : () => this.handlePostVote(post.id, false);
         const viewLocation = `/${post.category}`
+        const menuItems = [
+            {
+                id: 'edit',
+                displayName: 'Edit',
+                iconClass: 'glyphicon glyphicon-pencil',
+                action: () => history.push(`${viewLocation}/posts/${post.id}`)
+            }, {
+                id: 'delete',
+                displayName: 'Delete',
+                iconClass: 'glyphicon glyphicon-remove',
+                // action: () => history.push(`${viewLocation}/posts/${post.id}`)
+            }
+        ]
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <div>
-                        {!readOnly && <Link to={`${viewLocation}/posts/${post.id}`} className="extra-margin-lr">
-                            <span className="glyphicon glyphicon-pencil"></span>
-                        </Link>
-
-                        }
-
+                        {!readOnly && <DropdownMenu menuItems={menuItems}/>}
                         <h3 className="panel-title inline-block">{post.title}</h3>
                         <div className="text-right pull-right">{moment(post.timestamp).format('MMMM Do YYYY, h:mm A')}</div>
                     </div>
