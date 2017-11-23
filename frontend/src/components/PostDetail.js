@@ -8,7 +8,7 @@ import moment from 'moment'
 import {updatePost} from '../actions'
 
 import * as Api from '../utils/api'
-import {VoteScore, Voter, CommentList} from './'
+import {CommentList, VoteScore} from './'
 
 class PostDetail extends Component {
     constructor(props) {
@@ -25,7 +25,7 @@ class PostDetail extends Component {
         // history.push(url);
     }
     componentDidMount() {
-        const {post, readOnly} = this.props;
+        const {post} = this.props;
         if (!post) return;
 
         Api.fetchPostComments(post.id)
