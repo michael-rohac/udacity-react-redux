@@ -1,6 +1,8 @@
 /**
  * © 2017 Michal Rohac, All Rights Reserved.
  */
+import moment from 'moment'
+
 const api = "http://localhost:3001"
 
 // Generate a unique token for storing your bookshelf data on the backend server.
@@ -80,6 +82,17 @@ export const commentVote = (commentId, upVote) =>
         },
         body: JSON.stringify({option: upVote ? 'upVote' : 'downVote'})
     }).then(res => res.json())
+
+export const updateComment = (commentId, body) => {
+    return fetch(`${api}/comments/${commentId}`, {
+        method: 'PUT',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({body, timestamp: moment.now()})
+    }).then(res => res.json())
+}
 
 export const deletePostComment = (commentId) => {
     return fetch(`${api}/comments/${commentId}`, {

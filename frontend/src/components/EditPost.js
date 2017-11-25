@@ -126,7 +126,7 @@ function mapStateToProps({posts, categories}, {location, match}) {
     const post = match.params && match.params.id && posts[category] ?
         posts[category][match.params.id] : {
             id: uuid(),
-            timestamp: moment().toDate(),
+            timestamp: moment.now(),
             title: "",
             body: "",
             author: "",
