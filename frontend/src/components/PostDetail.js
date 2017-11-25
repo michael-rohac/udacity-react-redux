@@ -2,7 +2,7 @@
  * © 2017 Michal Rohac, All Rights Reserved.
  */
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import {updatePost} from '../actions'
@@ -40,24 +40,26 @@ class PostDetail extends Component {
         const upVote = readOnly ? undefined : () => this.handlePostVote(post.id, true);
         const downVote = readOnly ? undefined : () => this.handlePostVote(post.id, false);
         const viewLocation = `/${post.category}`
-        const menuItems = [
-            {
-                id: 'edit',
-                displayName: 'Edit',
-                iconClass: 'glyphicon glyphicon-pencil',
-                action: () => history.push(`${viewLocation}/posts/${post.id}`)
-            }, {
-                id: 'delete',
-                displayName: 'Delete',
-                iconClass: 'glyphicon glyphicon-remove',
-                // action: () => history.push(`${viewLocation}/posts/${post.id}`)
-            }
-        ]
+        const menu = {
+            menuItems: [
+                {
+                    id: 'edit',
+                    displayName: 'Edit',
+                    iconClass: 'glyphicon glyphicon-pencil',
+                    action: () => history.push(`${viewLocation}/posts/${post.id}`)
+                }, {
+                    id: 'delete',
+                    displayName: 'Delete',
+                    iconClass: 'glyphicon glyphicon-remove',
+                    // action: () => history.push(`${viewLocation}/posts/${post.id}`)
+                }
+            ]
+        }
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <div>
-                        {!readOnly && <DropdownMenu menuItems={menuItems}/>}
+                        {!readOnly && <DropdownMenu menu={menu}/>}
                         <h3 className="panel-title inline-block">{post.title}</h3>
                         <div className="text-right pull-right">{moment(post.timestamp).format('MMMM Do YYYY, h:mm A')}</div>
                     </div>
@@ -86,4 +88,5 @@ function mapDispatchToProps(dispatch) {
         updatePostAction: (post) => updatePost(post)(dispatch)
     }
 }
+
 export default withRouter(connect(null, mapDispatchToProps)(PostDetail));

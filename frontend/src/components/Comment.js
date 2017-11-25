@@ -2,8 +2,9 @@
  * © 2017 Michal Rohac, All Rights Reserved.
  */
 import React, {Component} from 'react';
-import {VoteScore} from './'
+import moment from 'moment'
 import * as Api from '../utils/api'
+import {VoteScore, DropdownMenu} from './'
 
 class Comment extends Component {
     constructor(props) {
@@ -14,28 +15,49 @@ class Comment extends Component {
         this.handleCommentVote.bind(this);
     }
     handleCommentVote(commentId, upVote) {
+        const {handleCommentUpdate} = this.props;
         Api.commentVote(commentId, upVote)
             .then(comment => {
-                console.log(comment);
+                this.setState({comment})
+                handleCommentUpdate && handleCommentUpdate(comment);
             })
     }
     render() {
         const {comment} = this.state
-        const upVote = () => this.handleCommentVote(comment.id, true);
-        const downVote = () => this.handleCommentVote(comment.id, false);
+        const upVote = () => this.handleCommentVote && this.handleCommentVote(comment.id, true);
+        const downVote = () => this.handleCommentVote && this.handleCommentVote(comment.id, false);
+        const menu = {
+            dropdownToggleIcon: 'glyphicon glyphicon-comment',
+            menuItems:  [
+                {
+                    id: 'edit',
+                    displayName: 'Edit',
+                    iconClass: 'glyphicon glyphicon-pencil',
+                    // action:
+                }, {
+                    id: 'delete',
+                    displayName: 'Delete',
+                    iconClass: 'glyphicon glyphicon-remove',
+                    // action:
+                }
+            ]
+        }
         return (
             <div className="panel panel-default">
                 <div className="panel-heading center">
                     <div className="inline-block">
-                        <span className="glyphicon glyphicon-comment extra-margin-lr"></span>
-                        {comment.author}
+                        <DropdownMenu menu={menu}/>
+                        Auhtor: {comment.author}
                     </div>
                     <div className="pull-right">
-                        <VoteScore voteScore={comment.voteScore} className="inline-block" upVote={upVote} downVote={downVote}/>
+                        <span>{moment(comment.timestamp).format('MMMM Do YYYY, h:mm A')}</span>
                     </div>
                 </div>
                 <div className="panel-body">
                     {comment.body}
+                </div>
+                <div className="panel-footer">
+                    <VoteScore voteScore={comment.voteScore} className="inline-block" upVote={upVote} downVote={downVote}/>
                 </div>
             </div>
         )

@@ -6,8 +6,6 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import uuid from 'uuid/v1'
 import moment from 'moment'
-
-import {PostDetail} from './'
 import * as Api from '../utils/api'
 import {updatePost} from '../actions'
 
@@ -118,7 +116,6 @@ class EditPost extends Component {
                     </div>
                 </form>
                 <hr/>
-                <PostDetail post={{...this.props.post, ...this.state.post}} readOnly={true}/>
             </div>
         )
     }
