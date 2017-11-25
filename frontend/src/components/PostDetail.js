@@ -30,15 +30,21 @@ class PostDetail extends Component {
     handlePostVote(postId, upVote) {
         const {updatePostAction} = this.props;
         Api.postVote(postId, upVote)
-            .then(data => {
-                updatePostAction(data)
+            .then(post => {
+                updatePostAction(post)
             })
+    }
+    handleDeletePost() {
+        const {post, updatePostAction} = this.props;
+        Api.deletePost(post.id)
+            .then(data => updatePostAction(data))
     }
     render() {
         const {post, readOnly, history} = this.props;
         const {comments} = this.state;
         const upVote = readOnly ? undefined : () => this.handlePostVote(post.id, true);
         const downVote = readOnly ? undefined : () => this.handlePostVote(post.id, false);
+
         const viewLocation = `/${post.category}`
         const menu = {
             menuItems: [
@@ -51,7 +57,7 @@ class PostDetail extends Component {
                     id: 'delete',
                     displayName: 'Delete',
                     iconClass: 'glyphicon glyphicon-remove',
-                    // action: () => history.push(`${viewLocation}/posts/${post.id}`)
+                    action: this.handleDeletePost.bind(this)
                 }
             ]
         }
@@ -65,9 +71,7 @@ class PostDetail extends Component {
                     </div>
                 </div>
                 <div className="panel-body">
-                    {post.body && post.body.split("\n").map((text, idx) => (
-                        <p key={idx}>{text}</p>
-                    ))}
+                    {post.body && post.body.split("\n").map((text, idx) => text ? (<p key={idx}>{text}</p>) : (<br key={idx}/>))}
                     <CommentList comments={comments}/>
                 </div>
                 <div className="panel-footer">

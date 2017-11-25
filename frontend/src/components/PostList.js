@@ -11,7 +11,7 @@ import {PostDetail} from './'
 class PostList extends Component {
     render() {
         let {postsOrder} = this.props;
-        const posts = (this.props.posts).sort((post1, post2) => {
+        const posts = this.props.posts.filter(post => !post.deleted).sort((post1, post2) => {
             const ascResult = postsOrder.by === CONST.ORDER_BY_TIMESTAMP ?
                 dateCompare(post1.timestamp, post2.timestamp) : post1.voteScore - post2.voteScore;
             return postsOrder.ascending ? ascResult : -ascResult;

@@ -57,6 +57,16 @@ export const createPost = (post) => {
     }).then(res => res.json())
 }
 
+export const deletePost = (postId) => {
+    return fetch(`${api}/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        }
+    }).then(res => res.json())
+}
+
 export const fetchPostComments = (postId) => {
     return fetch(`${api}/posts/${postId}/comments`, {headers}).then(res => res.json())
 }
@@ -70,3 +80,13 @@ export const commentVote = (commentId, upVote) =>
         },
         body: JSON.stringify({option: upVote ? 'upVote' : 'downVote'})
     }).then(res => res.json())
+
+export const deletePostComment = (commentId) => {
+    return fetch(`${api}/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        }
+    }).then(res => res.json())
+}

@@ -22,6 +22,14 @@ class Comment extends Component {
                 handleCommentUpdate && handleCommentUpdate(comment);
             })
     }
+    handleDeleteComment() {
+        const {handleCommentUpdate} = this.props;
+        const {comment} = this.state;
+        Api.deletePostComment(comment.id)
+            .then(comment => {
+                handleCommentUpdate && handleCommentUpdate(comment);
+            })
+    }
     render() {
         const {comment} = this.state
         const upVote = () => this.handleCommentVote && this.handleCommentVote(comment.id, true);
@@ -38,7 +46,7 @@ class Comment extends Component {
                     id: 'delete',
                     displayName: 'Delete',
                     iconClass: 'glyphicon glyphicon-remove',
-                    // action:
+                    action: this.handleDeleteComment.bind(this)
                 }
             ]
         }

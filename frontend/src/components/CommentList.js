@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {Comment} from './'
 
 function _sort(comments) {
-    return comments.sort((c1, c2) => c2.voteScore - c1.voteScore)
+    return comments.filter(comment => !comment.deleted).sort((c1, c2) => c2.voteScore - c1.voteScore)
 }
 
 class CommentList extends Component {
