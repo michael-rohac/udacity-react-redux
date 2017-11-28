@@ -116,7 +116,7 @@ class PostDetail extends Component {
                                 <hr/>
                                 <div style={{marginBottom: 10}}>
                                     <em>
-                                        Comments:
+                                        {comments.length > 0 ? `Contains ${comments.length} comment(s):` : 'No comments yet:'}
                                         <a href="" className="btn" onClick={this.addComment.bind(this)}>
                                             <span className="glyphicon glyphicon-plus"></span>
                                             &nbsp;Add

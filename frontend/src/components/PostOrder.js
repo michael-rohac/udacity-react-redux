@@ -39,26 +39,29 @@ class PostOrder extends Component {
             }
         }
         return (
-            <h4>
-                <div className="btn-group">
-                    <button className="btn btn-default" onClick={e => this.handleUpdatePostOrderDirection(e)}>
-                        <span className={`glyphicon ${postsOrder.ascending ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'}`}></span>
-                    </button>
-                    <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                        {orderBy()}&nbsp;
-                        <span className="caret"></span>
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li className={postsOrder.by === CONST.ORDER_BY_VOTE_SCORE ? 'active' : ''}>
-                            <a href="" onClick={e => this.handleUpdatePostOrderBy(e, CONST.ORDER_BY_VOTE_SCORE)}>{orderBy(CONST.ORDER_BY_VOTE_SCORE)}</a>
-                        </li>
-                        <li className={postsOrder.by === CONST.ORDER_BY_TIMESTAMP ? 'active' : ''}>
-                            <a href="" onClick={e => this.handleUpdatePostOrderBy(e, CONST.ORDER_BY_TIMESTAMP)}>{orderBy(CONST.ORDER_BY_TIMESTAMP)}</a>
-                        </li>
-                    </ul>
-                </div>
-            </h4>
+            <div>
+                <h5 className="inline-block">Posts ordering:&nbsp;</h5>
+                <h4 className="inline-block">
+                    <div className="btn-group">
+                        <button className="btn btn-default" onClick={e => this.handleUpdatePostOrderDirection(e)}>
+                            <span className={`glyphicon ${postsOrder.ascending ? 'glyphicon-sort-by-attributes' : 'glyphicon-sort-by-attributes-alt'}`}></span>
+                        </button>
+                        <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            {orderBy()}&nbsp;
+                            <span className="caret"></span>
+                        </button>
+                        <ul className="dropdown-menu">
+                            <li className={postsOrder.by === CONST.ORDER_BY_VOTE_SCORE ? 'active' : ''}>
+                                <a href="" onClick={e => this.handleUpdatePostOrderBy(e, CONST.ORDER_BY_VOTE_SCORE)}>{orderBy(CONST.ORDER_BY_VOTE_SCORE)}</a>
+                            </li>
+                            <li className={postsOrder.by === CONST.ORDER_BY_TIMESTAMP ? 'active' : ''}>
+                                <a href="" onClick={e => this.handleUpdatePostOrderBy(e, CONST.ORDER_BY_TIMESTAMP)}>{orderBy(CONST.ORDER_BY_TIMESTAMP)}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </h4>
+            </div>
         )
     }
 }
