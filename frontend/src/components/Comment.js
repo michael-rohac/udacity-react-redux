@@ -4,12 +4,15 @@
 import React, {Component} from 'react';
 import moment from 'moment'
 import * as Api from '../utils/api'
-import {VoteScore, DropdownMenu} from './'
+import {DropdownMenu, VoteScore} from './'
 
 class Comment extends Component {
     constructor(props) {
-        super(props);
+        super(props)
+        const newComment = props.handleAddComment && props.handleCancelComment ? true : false
         this.state = {
+            newComment: newComment,
+            editMode: newComment,
             comment: props.comment
         }
         this.handleCommentVote.bind(this);
@@ -49,21 +52,29 @@ class Comment extends Component {
         }});
     }
     handleSaveComment() {
-        const {comment} = this.state
-        const {handleCommentUpdate} = this.props;
-        Api.updateComment(comment.id, comment.body)
-            .then(comment => {
-                this.setState({comment, editMode: false})
-                handleCommentUpdate && handleCommentUpdate(comment);
-            })
+        const {comment, newComment} = this.state
+        const {handleCommentUpdate, handleAddComment} = this.props;
+        if (newComment) {
+            handleAddComment(comment);
+        } else {
+            Api.updateComment(comment.id, comment.body)
+                .then(comment => {
+                    this.setState({comment, editMode: false})
+                    handleCommentUpdate && handleCommentUpdate(comment);
+                })
+        }
     }
     handleCancel() {
-        const {comment} = this.props
-        this.setState({comment, editMode: false})
+        const {comment, handleCancelComment} = this.props
+        const {newComment} = this.state
+        if (newComment) { // new comment delegate
+            handleCancelComment();
+        } else { // edit comment
+            this.setState({comment, editMode: false})
+        }
     }
     render() {
-        const {comment, editMode = false} = this.state
-        const {newComment = false} = this.props
+        const {comment, newComment, editMode = false} = this.state
         const upVote = () => this.handleCommentVote && this.handleCommentVote(comment.id, true);
         const downVote = () => this.handleCommentVote && this.handleCommentVote(comment.id, false);
         const menu = {

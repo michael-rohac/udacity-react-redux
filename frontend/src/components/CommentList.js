@@ -18,25 +18,24 @@ class CommentList extends Component {
             comments: !comments ? [] : _sort(comments)
         }
     }
+
     componentWillReceiveProps(nextProps) {
         this.setState({
             comments: _sort(nextProps.comments)
         })
     }
+
     handleCommentUpdate(comment) {
         const {comments} = this.state
         this.setState({
             comments: _sort(comments.map(c => c.id !== comment.id ? c : comment))
         })
     }
+
     render() {
         const {comments} = this.state;
         return (
             <div>
-                <hr/>
-                <div style={{marginBottom: 10}}>
-                    <em>Comments:</em>
-                </div>
                 {comments.map(comment => (<Comment key={comment.id} comment={comment} handleCommentUpdate={this.handleCommentUpdate.bind(this)}/>))}
             </div>
         )

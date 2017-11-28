@@ -4,20 +4,24 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
+import uuid from 'uuid/v1'
 import moment from 'moment'
 import {updatePost} from '../actions'
 
 import * as Api from '../utils/api'
-import {CommentList, VoteScore, DropdownMenu} from './'
+import {CommentList, Comment, VoteScore, DropdownMenu} from './'
 
 class PostDetail extends Component {
     constructor(props) {
         super(props);
         this.handlePostVote.bind(this);
     }
+
     state = {
+        addComment: false,
         comments: []
     }
+
     componentDidMount() {
         const {post} = this.props;
         if (!post) return;
@@ -27,6 +31,7 @@ class PostDetail extends Component {
                 this.setState({comments})
             })
     }
+
     handlePostVote(postId, upVote) {
         const {updatePostAction} = this.props;
         Api.postVote(postId, upVote)
@@ -34,14 +39,38 @@ class PostDetail extends Component {
                 updatePostAction(post)
             })
     }
+
     handleDeletePost() {
         const {post, updatePostAction} = this.props;
         Api.deletePost(post.id)
             .then(data => updatePostAction(data))
     }
+
+    addComment(e) {
+        e.preventDefault();
+        this.setState({addComment: true})
+    }
+
+    handleCancelComment() {
+        this.setState({addComment: false})
+    }
+
+    handleAddComment(newComment) {
+        if (!newComment) {
+            this.setState({addComment: false})
+            return
+        }
+        const {comments} = this.state
+        Api.createComment(newComment)
+            .then(comment => {
+                comments.push(comment)
+                this.setState({addComment: false})
+            })
+    }
+
     render() {
         const {post, readOnly, history} = this.props;
-        const {comments} = this.state;
+        const {comments, addComment} = this.state;
         const upVote = readOnly ? undefined : () => this.handlePostVote(post.id, true);
         const downVote = readOnly ? undefined : () => this.handlePostVote(post.id, false);
 
@@ -67,12 +96,37 @@ class PostDetail extends Component {
                     <div>
                         {!readOnly && <DropdownMenu menu={menu}/>}
                         <h3 className="panel-title inline-block">{post.title}</h3>
-                        <div className="text-right pull-right">{moment(post.timestamp).format('MMMM Do YYYY, h:mm A')}</div>
+                        <div
+                            className="text-right pull-right">{moment(post.timestamp).format('MMMM Do YYYY, h:mm A')}</div>
                     </div>
                 </div>
                 <div className="panel-body">
                     {post.body && post.body.split("\n").map((text, idx) => text ? (<p key={idx}>{text}</p>) : (<br key={idx}/>))}
-                    <CommentList comments={comments}/>
+                    {
+                        (addComment && <Comment comment={{
+                                id: uuid(),
+                                timestamp: moment.now(),
+                                body: "",
+                                author: "",
+                                parentId: post.id
+                            }} handleAddComment={this.handleAddComment.bind(this)} handleCancelComment={this.handleCancelComment.bind(this)}/>
+                        ) ||
+                        (
+                            <div>
+                                <hr/>
+                                <div style={{marginBottom: 10}}>
+                                    <em>
+                                        Comments:
+                                        <a href="" className="btn" onClick={this.addComment.bind(this)}>
+                                            <span className="glyphicon glyphicon-plus"></span>
+                                            &nbsp;Add
+                                        </a>
+                                    </em>
+                                </div>
+                                <CommentList comments={comments}/>
+                            </div>
+                        )
+                    }
                 </div>
                 <div className="panel-footer">
                     <div className="inline-block">
