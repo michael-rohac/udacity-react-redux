@@ -7,7 +7,7 @@ import '../styles/App.css';
 
 import {fetchCategories, fetchPosts} from "../actions"
 
-import {Category, EditPost, PostList, PostOrder} from './'
+import {Category, AddOrEditPost, PostList, PostOrder} from './'
 import PostDetail from "./PostDetail";
 
 class App extends Component {
@@ -64,7 +64,7 @@ class App extends Component {
                                             <Route exact path={`/${category.path}`} component={Category}/>
                                             <Route exact path={`/${category.path}/:id`} render={({location}) => {
                                                 const queryParams = queryString.parse(location.search)
-                                                return (queryParams.edit || queryParams.edit === null ? <EditPost/> : <PostDetail/>)
+                                                return (queryParams.edit || queryParams.edit === null ? <AddOrEditPost/> : <PostDetail/>)
                                             }}/>
                                         </div>
                                     ))}

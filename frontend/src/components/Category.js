@@ -4,7 +4,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {EditPost, PostList, PostOrder} from './'
+import {AddOrEditPost, PostList, PostOrder} from './'
 
 class Category extends Component {
     state = {
@@ -26,7 +26,7 @@ class Category extends Component {
         return (
             <div>
                 {newPost && (
-                    <EditPost cancelNewPost={this.handleCancelNewPost.bind(this)}/>
+                    <AddOrEditPost cancelNewPost={this.handleCancelNewPost.bind(this)}/>
                 )}
                 {!newPost && (
                     <div>

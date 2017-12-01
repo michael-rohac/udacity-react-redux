@@ -12,7 +12,7 @@ import * as Api from '../utils/api'
 import {parseRelativePathSegments} from '../utils/helpers'
 import {updatePost} from '../actions'
 
-class EditPost extends Component {
+class AddOrEditPost extends Component {
     constructor(props) {
         super(props);
         const {title = '', body = '', author = ''} = props.post || {};
@@ -152,4 +152,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditPost))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AddOrEditPost))
