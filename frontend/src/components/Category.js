@@ -2,28 +2,50 @@
  * © 2017 Michal Rohac, All Rights Reserved.
  */
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {PostList, PostOrder} from './'
+import {EditPost, PostList, PostOrder} from './'
 
 class Category extends Component {
+    state = {
+        newPost: false
+    }
+
+    handleSwitchToNewPost(e) {
+        e.preventDefault()
+        this.setState({newPost: true})
+    }
+
+    handleCancelNewPost() {
+        this.setState({newPost: false})
+    }
+
     render() {
-        const {category} = this.props;
+        const {category} = this.props
+        const {newPost} = this.state
         return (
             <div>
-                <div>
-                    <h4 className="inline-block">
-                        <Link to={`/${category.path}/posts`}>
-                            <span className="glyphicon glyphicon-plus"></span>
-                            &nbsp;Post to {category.name}
-                        </Link>
-                    </h4>
-                    <div className="pull-right">
-                        <PostOrder/>
+                {newPost && (
+                    <EditPost cancelNewPost={this.handleCancelNewPost.bind(this)}/>
+                )}
+                {!newPost && (
+                    <div>
+                        <div>
+                            <h4 className="inline-block" onClick={this.handleSwitchToNewPost.bind(this)}>
+                                <a href="">
+                                    <span className="glyphicon glyphicon-plus"></span>
+                                    &nbsp;Post to {category.name}
+                                </a>
+                            </h4>
+                            <div className="pull-right">
+                                <PostOrder/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <PostList/>
+
                     </div>
-                </div>
-                <hr/>
-                <PostList/>
+                )}
             </div>
         )
     }

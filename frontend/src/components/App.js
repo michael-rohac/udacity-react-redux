@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {Route, withRouter} from 'react-router-dom'
+import queryString from 'query-string'
 
 import '../styles/App.css';
 
 import {fetchCategories, fetchPosts} from "../actions"
 
 import {Category, EditPost, PostList, PostOrder} from './'
+import PostDetail from "./PostDetail";
 
 class App extends Component {
     state = {
@@ -60,8 +62,10 @@ class App extends Component {
                                     {categories.map(category => (
                                         <div key={category.path}>
                                             <Route exact path={`/${category.path}`} component={Category}/>
-                                            <Route exact path={`/${category.path}/posts`} component={EditPost}/>
-                                            <Route exact path={`/${category.path}/posts/:id`} component={EditPost}/>
+                                            <Route exact path={`/${category.path}/:id`} render={({location}) => {
+                                                const queryParams = queryString.parse(location.search)
+                                                return (queryParams.edit || queryParams.edit === null ? <EditPost/> : <PostDetail/>)
+                                            }}/>
                                         </div>
                                     ))}
                                 </div>

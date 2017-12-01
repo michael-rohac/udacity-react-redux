@@ -6,7 +6,10 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import uuid from 'uuid/v1'
 import moment from 'moment'
+import queryString from 'query-string'
+
 import * as Api from '../utils/api'
+import {parseRelativePathSegments} from '../utils/helpers'
 import {updatePost} from '../actions'
 
 class EditPost extends Component {
@@ -63,7 +66,7 @@ class EditPost extends Component {
 
     render() {
         const {history, category} = this.props;
-        const {editMode} = this.props;
+        const {editMode, cancelNewPost} = this.props;
         return (
             <div>
                 <div>
@@ -71,7 +74,12 @@ class EditPost extends Component {
                     <div className="pull-right">
                         <button className="btn btn-default" title="Go Back" onClick={e => {
                             e.preventDefault();
-                            history.goBack();
+                            // go back differs for new/edit action
+                            if (cancelNewPost) {
+                                cancelNewPost()
+                            } else {
+                                history.goBack();
+                            }
                         }}>
                             <span className="glyphicon glyphicon-arrow-left"></span>
                             &nbsp;Back
@@ -122,7 +130,9 @@ class EditPost extends Component {
 }
 
 function mapStateToProps({posts, categories}, {location, match}) {
-    const category = location.pathname.split('/')[1];
+    const category = parseRelativePathSegments(location.pathname)[0];
+    const queryParams = queryString.parse(location.search);
+    const editMode = queryParams.edit || queryParams.edit === null;
     const post = match.params && match.params.id && posts[category] ?
         posts[category][match.params.id] : {
             id: uuid(),
@@ -133,7 +143,7 @@ function mapStateToProps({posts, categories}, {location, match}) {
             category: category,
             voteScore: 0
         };
-    return {post, category: categories[category], editMode: match.params && match.params.id && posts[category] ? true : false}
+    return {post, category: categories[category], editMode}
 }
 
 function mapDispatchToProps(dispatch) {
