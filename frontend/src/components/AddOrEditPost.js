@@ -28,13 +28,14 @@ class AddOrEditPost extends Component {
     }
 
     handleSave(e) {
-        const {post, history, updatePostAction} = this.props;
+        const {post, updatePostAction, switchToViewMode} = this.props;
         const newPost = {...post, ...this.state.post};
         const opPromise = this.props.editMode ?
             Api.updatePost(newPost) : Api.createPost(newPost);
         opPromise.then(data => {
             updatePostAction(data);
-            history.goBack();
+            if (switchToViewMode) switchToViewMode();
+            // history.goBack();
         })
     }
     handleAuthorChanged(e) {
@@ -66,7 +67,7 @@ class AddOrEditPost extends Component {
 
     render() {
         const {history, category} = this.props;
-        const {editMode, cancelNewPost} = this.props;
+        const {editMode, switchToViewMode} = this.props;
         return (
             <div>
                 <div>
@@ -75,8 +76,8 @@ class AddOrEditPost extends Component {
                         <button className="btn btn-default" title="Go Back" onClick={e => {
                             e.preventDefault();
                             // go back differs for new/edit action
-                            if (cancelNewPost) {
-                                cancelNewPost()
+                            if (switchToViewMode) {
+                                switchToViewMode()
                             } else {
                                 history.goBack();
                             }

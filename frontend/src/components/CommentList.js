@@ -5,15 +5,13 @@ import React, {Component} from 'react';
 import {Comment} from './'
 
 function _sort(comments) {
-    return comments.filter(comment => !comment.deleted).sort((c1, c2) => c2.voteScore - c1.voteScore)
+    return comments.filter(c => !c.deleted).sort((c1, c2) => c2.voteScore - c1.voteScore)
 }
 
 class CommentList extends Component {
     constructor(props) {
         super(props);
         const {comments} = props;
-
-        this.handleCommentUpdate.bind(this);
         this.state = {
             comments: !comments ? [] : _sort(comments)
         }
@@ -25,18 +23,24 @@ class CommentList extends Component {
         })
     }
 
-    handleCommentUpdate(comment) {
-        const {comments} = this.state
-        this.setState({
-            comments: _sort(comments.map(c => c.id !== comment.id ? c : comment))
-        })
-    }
-
     render() {
         const {comments} = this.state;
+        const {switchToAddComment, commentUpdate} = this.props;
         return (
             <div>
-                {comments.map(comment => (<Comment key={comment.id} comment={comment} handleCommentUpdate={this.handleCommentUpdate.bind(this)}/>))}
+                <div style={{marginBottom: 10}}>
+                    <em>
+                        {comments.length > 0 ? `Contains ${comments.length} comment(s):` : 'No comments yet:'}
+                        <a href="" className="btn" onClick={e => {
+                            e.preventDefault()
+                            switchToAddComment()}
+                        }>
+                            <span className="glyphicon glyphicon-plus"></span>
+                            &nbsp;Add
+                        </a>
+                    </em>
+                </div>
+                {comments.map(comment => (<Comment key={comment.id} comment={comment} handleCommentUpdate={commentUpdate}/>))}
             </div>
         )
     }

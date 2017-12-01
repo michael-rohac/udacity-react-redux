@@ -25,8 +25,12 @@ class PostDetail extends Component {
     }
 
     componentDidMount() {
-        const {post} = this.props;
+        const {post, singlePostView, history} = this.props;
         if (!post) return;
+        if (singlePostView && !post.id) {
+            history.replace("/")
+            return;
+        }
 
         Api.fetchPostComments(post.id)
             .then(comments => {
@@ -43,13 +47,22 @@ class PostDetail extends Component {
     }
 
     handleDeletePost() {
-        const {post, updatePostAction} = this.props;
+        const {post, updatePostAction, singlePostView, history} = this.props;
         Api.deletePost(post.id)
-            .then(data => updatePostAction(data))
+            .then(data => {
+                updatePostAction(data)
+                if (singlePostView) history.replace(`/${post.category}`)
+            })
     }
 
-    addComment(e) {
-        e.preventDefault();
+    handleCommentUpdate(comment) {
+        const {comments} = this.state
+        this.setState({
+            comments: comments.map(c => c.id !== comment.id ? c : comment)
+        })
+    }
+
+    handleSwitchToAddComment(e) {
         this.setState({addComment: true})
     }
 
@@ -75,7 +88,6 @@ class PostDetail extends Component {
         const {comments, addComment} = this.state;
         const upVote = readOnly ? undefined : () => this.handlePostVote(post.id, true);
         const downVote = readOnly ? undefined : () => this.handlePostVote(post.id, false);
-
         const menu = {
             menuItems: [
                 {
@@ -109,7 +121,7 @@ class PostDetail extends Component {
                                 <h3 className="panel-title inline-block">
                                     <a href="" onClick={e => {
                                         e.preventDefault();
-                                        history.push(`/${category}/${post.id}`)
+                                        if (!singlePostView) history.push(`/${category}/${post.id}`);
                                     }}>{post.title}</a>
                                 </h3>
                                 <div
@@ -126,22 +138,14 @@ class PostDetail extends Component {
                                         body: "",
                                         author: "",
                                         parentId: post.id
-                                    }} handleAddComment={this.handleAddComment.bind(this)}
-                                                        handleCancelComment={this.handleCancelComment.bind(this)}/>
+                                    }} handleAddComment={this.handleAddComment.bind(this)} handleCancelComment={this.handleCancelComment.bind(this)}/>
                                 ) ||
                                 (
                                     <div>
                                         <hr/>
-                                        <div style={{marginBottom: 10}}>
-                                            <em>
-                                                {comments.length > 0 ? `Contains ${comments.length} comment(s):` : 'No comments yet:'}
-                                                <a href="" className="btn" onClick={this.addComment.bind(this)}>
-                                                    <span className="glyphicon glyphicon-plus"></span>
-                                                    &nbsp;Add
-                                                </a>
-                                            </em>
-                                        </div>
-                                        <CommentList comments={comments}/>
+                                        <CommentList comments={comments}
+                                                     commentUpdate={this.handleCommentUpdate.bind(this)}
+                                                     switchToAddComment={this.handleSwitchToAddComment.bind(this)}/>
                                     </div>
                                 )
                             }

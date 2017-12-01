@@ -16,7 +16,7 @@ class Category extends Component {
         this.setState({newPost: true})
     }
 
-    handleCancelNewPost() {
+    handleSwitchToViewMode() {
         this.setState({newPost: false})
     }
 
@@ -26,7 +26,7 @@ class Category extends Component {
         return (
             <div>
                 {newPost && (
-                    <AddOrEditPost cancelNewPost={this.handleCancelNewPost.bind(this)}/>
+                    <AddOrEditPost switchToViewMode={this.handleSwitchToViewMode.bind(this)}/>
                 )}
                 {!newPost && (
                     <div>
