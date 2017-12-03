@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {Route, withRouter} from 'react-router-dom'
+import {bindActionCreators} from 'redux'
 import queryString from 'query-string'
 
 import '../styles/App.css';
 
-import CategoriesActions from '../categories/CategoriesActions'
-import PostActions from '../posts/PostsActions'
+import * as CategoriesActions from '../categories/CategoriesActions'
+import * as PostActions from '../posts/PostsActions'
 
 import {AddOrEditPost, Category, PostList, PostOrder} from './'
 import PostDetail from "../posts/PostDetail";
@@ -88,8 +89,8 @@ function mapStateToProps({categories}) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        ...CategoriesActions(dispatch),
-        ...PostActions(dispatch)
+        ...bindActionCreators(CategoriesActions, dispatch),
+        ...bindActionCreators(PostActions, dispatch),
     }
 }
 

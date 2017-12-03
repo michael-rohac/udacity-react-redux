@@ -4,9 +4,10 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 import uuid from 'uuid/v1'
 import moment from 'moment'
-import PostActions from './PostsActions'
+import * as PostActions from './PostsActions'
 
 import * as Api from '../utils/api'
 import {parseRelativePathSegments} from "../utils/helpers";
@@ -177,7 +178,7 @@ function mapStateToProps({posts}, {location, match, post}) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        ...PostActions(dispatch)
+        ...bindActionCreators(PostActions, dispatch)
     }
 }
 

@@ -3,6 +3,7 @@
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 import {withRouter} from 'react-router-dom'
 import uuid from 'uuid/v1'
 import moment from 'moment'
@@ -10,7 +11,7 @@ import queryString from 'query-string'
 
 import * as Api from '../utils/api'
 import {parseRelativePathSegments} from '../utils/helpers'
-import PostActions from './PostsActions'
+import * as PostActions from './PostsActions'
 
 class AddOrEditPost extends Component {
     constructor(props) {
@@ -152,7 +153,7 @@ function mapStateToProps({posts, categories}, {location, match}) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        ...PostActions(dispatch)
+        ...bindActionCreators(PostActions, dispatch)
     }
 }
 

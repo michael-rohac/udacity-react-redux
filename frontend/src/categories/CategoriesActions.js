@@ -4,7 +4,7 @@
 import {ADD_CATEGORIES} from './CategoriesReducer'
 import * as Api from "../utils/api"
 
-const fetchCategories = dispatch => (
+export const fetchCategories = () => (dispatch) => (
     Api.fetchCategories()
         .then(data => {
             dispatch({
@@ -13,9 +13,3 @@ const fetchCategories = dispatch => (
             });
         })
 );
-
-export default (dispatch) => {
-    return {
-        fetchCategories: () => fetchCategories(dispatch)
-    }
-}

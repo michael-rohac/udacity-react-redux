@@ -3,15 +3,9 @@
  */
 import {UPDATE_UI_SETTINGS} from './UiSettingsReducer'
 
-const updateUiSettings = (uiSettings, dispatch) => (
+export const updateUiSettings = uiSettings => dispatch => (
     dispatch({
         type: UPDATE_UI_SETTINGS,
         uiSettings
     })
 )
-
-export default (dispatch) => {
-    return {
-        updateUiSettings: (uiSettings) => updateUiSettings(uiSettings, dispatch)
-    }
-}
