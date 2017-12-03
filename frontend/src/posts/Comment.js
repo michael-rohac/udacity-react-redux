@@ -4,7 +4,7 @@
 import React, {Component} from 'react';
 import moment from 'moment'
 import * as Api from '../utils/api'
-import {DropdownMenu, VoteScore} from './'
+import {DropdownMenu, VoteScore} from '../app/index'
 
 class Comment extends Component {
     constructor(props) {

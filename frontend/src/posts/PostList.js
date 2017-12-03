@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {CONST, dateCompare} from '../utils/helpers'
 
-import {PostDetail} from './'
+import {PostDetail} from '../app/index'
 
 class PostList extends Component {
     render() {

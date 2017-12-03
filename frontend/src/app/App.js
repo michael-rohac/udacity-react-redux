@@ -5,10 +5,11 @@ import queryString from 'query-string'
 
 import '../styles/App.css';
 
-import {fetchCategories, fetchPosts} from "../actions"
+import CategoriesActions from '../categories/CategoriesActions'
+import PostActions from '../posts/PostsActions'
 
-import {Category, AddOrEditPost, PostList, PostOrder} from './'
-import PostDetail from "./PostDetail";
+import {AddOrEditPost, Category, PostList, PostOrder} from './'
+import PostDetail from "../posts/PostDetail";
 
 class App extends Component {
     state = {
@@ -64,7 +65,8 @@ class App extends Component {
                                             <Route exact path={`/${category.path}`} component={Category}/>
                                             <Route exact path={`/${category.path}/:id`} render={({location}) => {
                                                 const queryParams = queryString.parse(location.search)
-                                                return (queryParams.edit || queryParams.edit === null ? <AddOrEditPost/> : <PostDetail/>)
+                                                return (queryParams.edit || queryParams.edit === null ?
+                                                    <AddOrEditPost/> : <PostDetail/>)
                                             }}/>
                                         </div>
                                     ))}
@@ -86,8 +88,8 @@ function mapStateToProps({categories}) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        fetchCategories: () => fetchCategories(dispatch),
-        fetchPosts: () => fetchPosts(dispatch)
+        ...CategoriesActions(dispatch),
+        ...PostActions(dispatch)
     }
 }
 

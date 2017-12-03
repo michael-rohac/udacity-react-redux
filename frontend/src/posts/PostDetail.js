@@ -6,12 +6,12 @@ import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import uuid from 'uuid/v1'
 import moment from 'moment'
-import {updatePost} from '../actions'
+import PostActions from './PostsActions'
 
 import * as Api from '../utils/api'
 import {parseRelativePathSegments} from "../utils/helpers";
 
-import {Comment, CommentList, DropdownMenu, VoteScore} from './'
+import {Comment, CommentList, DropdownMenu, VoteScore} from '../app/index'
 
 class PostDetail extends Component {
     constructor(props) {
@@ -39,18 +39,18 @@ class PostDetail extends Component {
     }
 
     handlePostVote(postId, upVote) {
-        const {updatePostAction} = this.props;
+        const {updatePost} = this.props;
         Api.postVote(postId, upVote)
             .then(post => {
-                updatePostAction(post)
+                updatePost(post)
             })
     }
 
     handleDeletePost() {
-        const {post, updatePostAction, singlePostView, history} = this.props;
+        const {post, updatePost, singlePostView, history} = this.props;
         Api.deletePost(post.id)
             .then(data => {
-                updatePostAction(data)
+                updatePost(data)
                 if (singlePostView) history.replace(`/${post.category}`)
             })
     }
@@ -177,7 +177,7 @@ function mapStateToProps({posts}, {location, match, post}) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        updatePostAction: (post) => updatePost(post)(dispatch)
+        ...PostActions(dispatch)
     }
 }
 

@@ -2,7 +2,7 @@
  * © 2017 Michal Rohac, All Rights Reserved.
  */
 import React, {Component} from 'react';
-import {Comment} from './'
+import {Comment} from '../app/index'
 
 function _sort(comments) {
     return comments.filter(c => !c.deleted).sort((c1, c2) => c2.voteScore - c1.voteScore)

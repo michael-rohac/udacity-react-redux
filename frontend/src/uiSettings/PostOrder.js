@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import {updateUiSettings} from '../actions'
+import UiSettingsActions from './UiSettingsActions'
 import {CONST} from '../utils/helpers'
 
 class PostOrder extends Component {
@@ -74,7 +74,7 @@ function mapStateToProps({uiSettings}, {location}) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        updateUiSettings: (uiSettings) => updateUiSettings(uiSettings)(dispatch)
+        ...UiSettingsActions(dispatch)
     }
 }
 

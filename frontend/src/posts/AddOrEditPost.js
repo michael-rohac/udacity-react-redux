@@ -10,7 +10,7 @@ import queryString from 'query-string'
 
 import * as Api from '../utils/api'
 import {parseRelativePathSegments} from '../utils/helpers'
-import {updatePost} from '../actions'
+import PostActions from './PostsActions'
 
 class AddOrEditPost extends Component {
     constructor(props) {
@@ -28,14 +28,17 @@ class AddOrEditPost extends Component {
     }
 
     handleSave(e) {
-        const {post, updatePostAction, switchToViewMode} = this.props;
+        const {post, updatePost, switchToViewMode, history} = this.props;
         const newPost = {...post, ...this.state.post};
         const opPromise = this.props.editMode ?
             Api.updatePost(newPost) : Api.createPost(newPost);
         opPromise.then(data => {
-            updatePostAction(data);
-            if (switchToViewMode) switchToViewMode();
-            // history.goBack();
+            updatePost(data);
+            if (switchToViewMode) {
+                switchToViewMode();
+            } else {
+                history.goBack();
+            }
         })
     }
     handleAuthorChanged(e) {
@@ -149,7 +152,7 @@ function mapStateToProps({posts, categories}, {location, match}) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        updatePostAction: (post) => updatePost(post)(dispatch)
+        ...PostActions(dispatch)
     }
 }
 
